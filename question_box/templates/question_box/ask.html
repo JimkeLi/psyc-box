@@ -15,7 +15,7 @@
 <hr>
 <form action="{% url 'ask' %}" method="post" style="color:darkgreen">
     {% csrf_token %}
-    <textarea class="form-control is-valid textarea-big" name="question" placeholder="State Your Prolem Here!"
+    <textarea style="height:300px;" class="form-control is-valid textarea-big" name="question" placeholder="State Your Prolem Here!"
         required></textarea>
     <label for="select-topic"><span class="large">Please choose a topic for your problem </span></label>
     <select class="form-control form-select-lg mb-3" aria-label=".form-select-lg example" id="select-topic"
