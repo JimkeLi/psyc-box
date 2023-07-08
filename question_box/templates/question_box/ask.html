@@ -1,0 +1,38 @@
+{% extends "question_box/layout.html" %}
+{% load static %}
+
+{% block img %}
+<img sizes="100vw 50vh" width="1600" height="1000" src="{% static 'question_box/Share.jpg'%}"
+    alt="Students walk the stairs in Gleeson Library.">
+{% endblock %}
+
+{% block body %}
+<div class="f--field f--wysiwyg">
+    <h2>Share Your Problems With Us!</h2>
+    <p>Please notice that your dialogues will be posted on this website anonymously (see <a
+            href="{% url 'all_questions' %}">All Questions</a>). </p>
+</div>
+<hr>
+<form action="{% url 'ask' %}" method="post" style="color:darkgreen">
+    {% csrf_token %}
+    <textarea class="form-control is-valid textarea-big" name="question" placeholder="State Your Prolem Here!"
+        required></textarea>
+    <label for="select-topic"><span class="large">Please choose a topic for your problem </span></label>
+    <select class="form-control form-select-lg mb-3" aria-label=".form-select-lg example" id="select-topic"
+        name="topic">
+        <option value="family">Family</option>
+        <option value="study">Study</option>
+        <option value="social">Social</option>
+        <option value="personal developmeny">Personal Development</option>
+    </select>
+    <input type="submit" class="btn btn-success" id="but" value="submit" style="margin:10px" />
+</form>
+<!-- <script>
+    document.querySelector("#lang").onchange = () =>
+    {
+        document.querySelector("h2").innerText = "和我们分享您的问题！";
+        document.querySelector("p").innerHTML = `请注意您和咨询师所有的对话都会被匿名地公布在这个网站上(<a href="{% url 'all_questions' %}")>所有问题</a>);如果您不想公布您的对话，请在问题的开头写上：（我不想公开这段对话）`;
+    }
+</script> -->
+<script src="{% static 'question_box/ask.js' %}"></script>
+{% endblock %}

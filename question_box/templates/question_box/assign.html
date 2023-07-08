@@ -1,0 +1,73 @@
+{% extends "question_box/layout.html" %}
+{% load static %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block body %}
+    <h2>Assign</h2>
+    {% if title == "unassigned" %}
+        <a href="{% url 'assign' 'unassigned' %}" style="color: darkgray;">Unassigned</a>
+        <a href="{% url 'assign' 'assigned' %}">Assigned</a>
+    {% endif %}
+    {% if title == "assigned" %}
+        <a href="{% url 'assign' 'unassigned' %}">Unassigned</a>
+        <a href="{% url 'assign' 'assigned' %}" style="color: darkgray;">Assigned</a>
+    {% endif %}
+    <hr>
+    {% for box in boxes %}
+        {% if box.questions %}
+        <div class="border border-primary box">
+            <br>
+            {% for q_a in box.q_a_list %}
+                {% if q_a.type == "question" %}
+                    Q: {{ q_a.content.question }}
+                    {% if not q_a.content.post %}
+                        <p id="post_identifier{{ q_a.content.id }}">Waiting to be posted</p>
+                    {% else %}
+                        <p id="post_identifier{{ q_a.content.id }}">Already posted</p>
+                    {% endif %}
+                    <hr>
+                {% endif %}
+                {% if q_a.type == "answer" %}
+                    A: {{ q_a.content.answer }}
+                    {% if not q_a.content.confirmed %}
+                        <p id="confirm{{ q_a.content.id }}">Unconfirmed</p>
+                    {% else %}
+                        <p id="confirm{{ q_a.content.id }}">Confirmed</p>
+                    {% endif %}
+                    <hr>
+                {% endif %}
+            {% endfor %}
+            <form id="form{{ box.id }}">
+                <label for="answered_by{{ box.id }}">Assign a therapist to answer</label>
+                <select class="form-control" style="width:200px" id="answered_by{{ box.id }}">
+                {% for thera in theras %}
+                    <option>{{ thera.username }}</option>
+                {% endfor %}
+                </select>
+                <label for="confirmed_by{{ box.id }}">Assign a therapist to confirm</label>
+                <select class="form-control" style="width:200px" id="confirmed_by{{ box.id }}">
+                {% for thera in theras %}
+                    <option>{{ thera.username }}</option>
+                {% endfor %}
+                </select>
+                <input class="btn btn-primary" type="submit" id="submit{{ box.id }}" value="OK">
+            </form>
+            {% if box.answered_by %}
+                <p>Assigned to {{ box.answered_by.username }} to answer and {{ box.confirmed_by.username }} to confirm</p>
+            {% else %}
+                <p>Unassigned</p>
+            {% endif %}
+            {% if not box.answered %}
+                <p>Unanswered</p>
+            {% else %}
+                <p>Answered</p>
+            {% endif %}
+        </div>
+        <br>  
+        {% endif %}
+    {% endfor %}
+    <script src="{% static 'question_box/assign.js' %}"></script>
+{% endblock %}

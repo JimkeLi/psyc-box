@@ -1,0 +1,81 @@
+{% extends "question_box/layout.html" %}
+{% load static %}
+{% load i18n %}
+{% block title %}
+Conselling Box
+{% endblock %}
+
+{% block img %}
+<img sizes="100vw 50vh" width="1600" height="1000" src="{% static 'question_box/Banner.jpg'%}"
+  alt="Students walk the stairs in Gleeson Library.">
+{% endblock %}
+
+{% block body %}
+<div class="f--field f--wysiwyg">
+  <h3 id="h3">
+    {% if lang == "en" %}
+
+    SDSZ Conselling Box
+
+    {% else %}
+
+    SDSZ 心理咨询箱
+
+    {% endif %}
+  </h3>
+  <!-- <p>SDSZ's Conselling Box, you can see what difficulties are facing your peers in the
+    <a href="{% url 'all_questions' %}">"All Questions"</a> page, and
+    share your own problems with us via the
+    <a href="{% url 'ask' %}">"Share Problems"</a> page. We will address each user a specific conseller to talk with.
+    Don't worry about your provicy: you can choose any nickname you like during the
+    sign up!
+  </p> -->
+  {% if lang == "en" %}
+
+  <p id="p1">SDSZ's Conselling Box is intended to help students to ajust their mental problems. If you are under a lot
+    of pressure, you could <a href="{% url 'ask' %}">share your problems</a> with us. We will assign a conselor to reply
+    to your problems and have one to one conversation with you on this website.
+  </p>
+  <p id="p2">Most of the time, people's mental stresses could be significantly alleviated just by knowing that others
+    are facing the same problems and seeing how others have overcome them. So, we are collecting the dialogues between
+    stressed students and our conselors, and your dialogues will be posted on this website (see <a
+      href="{% url 'all_questions' %}">All Questions</a>). Don't worry about your privacy, all your dialogues would be
+    anonymous, only the conselor you are talking to knows your name on this website (which is any nickname you would
+    like to make for yourself during registration)!</p>
+  <p id="p3">
+    Your sharing would be very helpful to those who are suffering from overwhelming pressure, and we really appreciate
+    that!
+  </p>
+  <a id="view" class="link " href="{% url 'all_questions' %}">View All the Questions</a>
+  &nbsp &nbsp &nbsp
+  <a id="share" class="link " href="{% url 'ask' %}">Share Problems With Us</a>
+
+  {% else %}
+
+  <p id="p1">SDSZ's 心理咨询箱 is intended to help students to ajust their mental problems. If you are under a lot
+    of pressure, you could <a href="{% url 'ask' %}">share your problems</a> with us. We will assign a conselor to reply
+    to your problems and have one to one conversation with you on this website.
+  </p>
+  <p id="p2">Most of the time, people's mental stresses could be significantly alleviated just by knowing that others
+    are facing the same problems and seeing how others have overcome them. So, we are collecting the dialogues between
+    stressed students and our conselors, and your dialogues will be posted on this website (see <a
+      href="{% url 'all_questions' %}">All Questions</a>). Don't worry about your privacy, all your dialogues would be
+    anonymous, only the conselor you are talking to knows your name on this website (which is any nickname you would
+    like to make for yourself during registration)!</p>
+  <p id="p3">
+    Your sharing would be very helpful to those who are suffering from overwhelming pressure, and we really appreciate
+    that!
+  </p>
+  <a id="view" class="link " href="{% url 'all_questions' %}">View All the Questions</a>
+  &nbsp &nbsp &nbsp
+  <a id="share" class="link " href="{% url 'ask' %}">Share Problems With Us</a>
+
+  {% endif %}
+</div>
+<!-- <script>
+  document.querySelector("#lang").onchange = () =>
+  {
+    document.querySelector("#h3").innerText = "SDSZ 心理提问箱";
+  }
+</script> -->
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends "question_box/layout.html" %}
+{% load static %}
+
+{% block title %}
+Question Box
+{% endblock %}
+
+{% block img %}
+<img sizes="100vw 50vh" width="1600" height="1000" src="{% static 'question_box/my_questions.jpg'%}"
+  alt="Students walk the stairs in Gleeson Library.">
+{% endblock %}
+
+{% block body %}
+<div class="f--field f--wysiwyg">
+  <h2>My Questions</h2>
+</div>
+<hr />
+
+{% for box in boxes %}
+<div class="border border-success box" id="box{{ box.id }}">
+  <br />
+  {% for q_a in box.q_a_list %}
+
+  {% if q_a.type == "question" %}
+  <div id="question_box{{ q_a.content.id }}" style="margin-left: 10px;">
+    <span class="large inline-block" id="question{{ q_a.content.id }}">Q: {{ q_a.content.question }}</span>
+    <p style="font-size: small; color:gray">Asked at {{ q_a.content.timestamp }}</p>
+
+    <!-- {% if not box.answered %}
+    <button id="post{{ q_a.content.id }}" class="btn btn-outline-secondary inline-block edit" style="margin:10px">
+      Edit
+    </button>
+
+    {% else %}
+    <sapn class="small-gray margin-left-10 inline-block">Answered</sapn>
+    {% endif %} -->
+
+    <!-- {% if not q_a.content.post %}
+    <span id="post_identifier{{ q_a.content.id }}" class="small-gray margin-left-10 inline-block"><i>Not
+        Posted</i></span>
+
+    {% else %}
+    <span id="post_identifier{{ q_a.content.id }}" class="small-gray margin-left-10 inline-block"><i>Posted</i></span>
+    {% endif %} -->
+
+    <br />
+  </div>
+  {% endif %}
+
+  {% if q_a.type == "answer" %}
+
+  {% if q_a.content.confirmed %}
+  <div style="margin-left: 100px">
+    <span class="large darkgreen"><i>A: {{ q_a.content.answer }}</i></span>
+    <p style="font-size: small; color:gray">Answered at {{ q_a.content.timestamp }}</p>
+  </div>
+  <br />
+  {% endif %}
+
+  {% endif %}
+
+  {% endfor %}
+  <button id="askMore{{ box.id }}" class="btn btn-success askMore but">
+    Continue the Dialogue
+  </button>
+
+</div>
+<br />
+{% endfor %}
+<script src="{% static 'question_box/my_questions.js' %}"></script>
+{% endblock %}

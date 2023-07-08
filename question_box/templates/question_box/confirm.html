@@ -1,0 +1,94 @@
+{% extends "question_box/layout.html" %}
+{% load static %}
+
+{% block title %}
+{% if user.user_type == "admin" %}
+Confirmation
+{% else %}
+{{ user.username }}'s Confirmation
+{% endif %}
+{% endblock %}
+
+{% block body %}
+
+{% if user.user_type == "admin" %}
+    <h2 id="{{ user.username }}">Confirmation</h2>
+{% else %}
+    <h2 id="{{ user.username }}">{{ user.username }}'s Confirmation</h2>
+{% endif %}
+
+{% if request_user.user_type == "admin" and user.user_type != "admin" %}
+    <a href="{% url 'answer' user.username 'unanswered' %}">Unanswered</a>
+    <a href="{% url 'answer' user.username 'answered' %}">Answered</a>
+{% endif %}
+
+{% if title == "unconfirmed" %}
+    <a href="{% url 'confirm' user.username 'unconfirmed' %}" style="color: darkgray;">Unconfirmed</a>
+    <a href="{% url 'confirm' user.username 'confirmed' %}">Confirmed</a>
+{% endif %}
+
+{% if title == "confirmed" %}
+    <a href="{% url 'confirm' user.username 'unconfirmed' %}">Unconfirmed</a>
+    <a href="{% url 'confirm' user.username 'confirmed' %}" style="color: darkgray;">Confirmed</a>
+{% endif %}
+
+<hr>
+{% for box in boxes %}
+    <div class="border border-primary box">
+        <br>
+        {% for q_a in box.q_a_list %}
+
+            {% if q_a.type == "question" %}
+                <span class = "large" style="margin-left:10px">Q: {{ q_a.content.question }}</span> 
+                <p style="font-size: small;color:gray;margin-left:10px">Asked at {{ q_a.content.timestamp }}</p>
+                <br>
+            {% endif %}
+
+            {% if q_a.type == "answer" %}
+                <span class = "large" style="margin-left:10px">A: {{ q_a.content.answer }}</span>
+                <p style="font-size: small;color:gray;margin-left:10px">Answered at {{ q_a.content.timestamp }}</p>
+
+                {% if request_user.user_type == "thera" %}
+
+                    {% if q_a.content.confirmed %}
+                        <button class="btn btn-primary" id="confirm{{ q_a.content.id }}" style="margin-left:10px">Unconfirm</button>
+                    {% else %}
+                        <button class="btn btn-primary" id="confirm{{ q_a.content.id }}" style="margin-left:10px">Confirm</button>
+                    {% endif %}
+                
+                {% else %}
+
+                    {% if q_a.content.confirmed %}
+                    <p style="color: red;margin-left:10px">Confirmed</p>
+                    {% else %}
+                    <p style="color: red;margin-left:10px">Unconfirmed</p>
+                    {% endif %}
+                    
+                {% endif %}
+                <br>
+                
+            {% endif %}
+
+        {% endfor %}
+
+        {% if box.answered_by %}
+            <p style="color: red;margin-left:10px">Assigned to {{ box.answered_by.username }} to answer and {{ box.confirmed_by.username }} to confirm</p>
+        {% else %}
+            <p>Unassigned</p>
+        {% endif %}
+
+        {% if not box.answered %}
+            <p style="color: red;margin-left:10px">Unanswered</p>
+        {% else %}
+            <p style="color: red;margin-left:10px">Answered</p>
+        {% endif %}
+        
+        <p style="color: red;margin-left:10px"><strong><i>{{ box.topic }}</i></strong></p>
+    </div>
+    <br>
+{% endfor %}
+<script src="{% static 'question_box/confirm.js' %}">
+
+
+</script>
+{% endblock %}

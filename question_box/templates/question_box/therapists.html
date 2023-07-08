@@ -1,0 +1,15 @@
+{% extends "question_box/layout.html" %}
+{% load static %}
+
+{% block body %}
+<h2>Therapists</h2>
+<h4><a href="{% url 'create_t' %}"><strong>Create New Therapists</strong></a></h4>
+<hr>
+<ul>
+    {% for thera in theras %}
+    <li>
+        <a href="/{{ thera.username }}/answer/unanswered">{{ thera.username }} ({{ thera.topic }})</a>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
