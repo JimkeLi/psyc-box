@@ -8,24 +8,23 @@
 
 {% block body %}
 <div class="f--field f--wysiwyg">
-    <h2>Share Your Problems With Us!</h2>
-    <p>Please notice that your dialogues will be posted on this website anonymously (see <a
-            href="{% url 'all_questions' %}">All Questions</a>). </p>
+    <h2>和我们分享您的问题!</h2>
+    <p>如果您不想公布您的对话，请在问题的开头写上：（我不想公开这段对话）</p>
 </div>
 <hr>
 <form action="{% url 'ask' %}" method="post" style="color:darkgreen">
-    {% csrf_token %}
-    <textarea style="height:300px;" class="form-control is-valid textarea-big" name="question" placeholder="State Your Prolem Here!"
+    <!-- {% csrf_token %} -->
+    <textarea style="height:300px;" class="form-control is-valid textarea-big" name="question" placeholder="在这里提出您的问题！"
         required></textarea>
-    <label for="select-topic"><span class="large">Please choose a topic for your problem </span></label>
+    <label for="select-topic"><span class="large">请给您的问题选择一个类别 </span></label>
     <select class="form-control form-select-lg mb-3" aria-label=".form-select-lg example" id="select-topic"
         name="topic">
-        <option value="family">Family</option>
-        <option value="study">Study</option>
-        <option value="social">Social</option>
-        <option value="personal developmeny">Personal Development</option>
+        <option value="family">家庭</option>
+        <option value="study">学业</option>
+        <option value="social">社交</option>
+        <option value="personal developmeny">个人发展</option>
     </select>
-    <input type="submit" class="btn btn-success" id="but" value="submit" style="margin:10px" />
+    <input type="submit" class="btn btn-success" id="but" value="提交" style="margin:10px" />
 </form>
 <!-- <script>
     document.querySelector("#lang").onchange = () =>

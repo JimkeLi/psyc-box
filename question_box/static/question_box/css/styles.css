@@ -40,7 +40,7 @@
 
 .textarea-small {
   width: calc(100% - 20px);
-  min-height: 200px;
+  min-height: 250px;
   margin: 10px;
 }
 

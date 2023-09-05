@@ -13,10 +13,11 @@ document.addEventListener('DOMContentLoaded', function() {
             //Create the text area of the form
             const textarea = document.createElement('textarea');
             textarea.name = "question";
-            textarea.placeholder = "Continue this dialogue";
+            textarea.placeholder = "继续这个对话";
 
             //Add some styles to the textarea
             addClasses(textarea, ["form-control", "is-valid", "textarea-small"])
+            textarea.style.minHeight = "200px"
 
             form.append(textarea);
             
@@ -30,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
             //Create the submit input to the form
             const submit = document.createElement( 'input' );
             submit.type = "submit";
-            submit.value = "submit";
+            submit.value = "提交";
 
             //Add some styles to the submit button
             addClasses(submit, ["btn", "btn-success", "but", "inline-block"]);
@@ -50,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             //Create the cancel button
             const cancel = document.createElement('button');
-            cancel.innerHTML = "cancel";
+            cancel.innerHTML = "取消";
             cancel.type = "button";
 
             //Add some styles to the submit button

@@ -81,7 +81,7 @@ def login_view(request):
             return HttpResponseRedirect(reverse("index"))
         else:
             return render(request, "question_box/login.html", {
-                "message": "Invalid username and/or password."
+                "message": "用户名或密码不正确"
             })
     else:
         return render(request, "question_box/login.html")
@@ -97,7 +97,7 @@ def register(request):
         confirmation = request.POST.get("confirmation")
         if password != confirmation:
             return render(request, "question_box/register.html", {
-                "message": "Passwords must match."
+                "message": "两次输入的密码不相符！"
             })
 
         # Attempt to create new user
@@ -107,7 +107,7 @@ def register(request):
             user.save()
         except IntegrityError:
             return render(request, "question_box/register.html", {
-                "message": "Username already taken."
+                "message": "用户名已被占用，请换一个"
             })
         login(request, user)
         return HttpResponseRedirect(reverse("index"))
@@ -178,7 +178,7 @@ def ask(request):
 
 
 @login_required(login_url="/login")
-@csrf_exempt
+# @csrf_exempt
 def my_questions(request):
     user = models.NewUser.objects.get(id=request.user.id)
     if user.user_type == "user":
@@ -291,7 +291,7 @@ def create_t(request):
 
 
 @login_required(login_url="/login")
-@csrf_exempt
+# @csrf_exempt
 def post(request, post):
     user = models.NewUser.objects.get(id=request.user.id)
 
@@ -368,7 +368,7 @@ def post(request, post):
 
 
 @login_required(login_url="/login")
-@csrf_exempt
+# @csrf_exempt
 def assign(request, assign):
     user = models.NewUser.objects.get(id=request.user.id)
 
@@ -441,7 +441,7 @@ def assign(request, assign):
 
 
 @login_required(login_url="/login")
-@csrf_exempt
+# @csrf_exempt
 def answer(request, username, answer):
 
     # The user that is submitting the request
@@ -573,7 +573,7 @@ def answer(request, username, answer):
 
 
 @login_required(login_url="/login")
-@csrf_exempt
+# @csrf_exempt
 def confirm(request, username, confirm):
     request_user = models.NewUser.objects.get(username=request.user.username)
     user = models.NewUser.objects.get(username=username)

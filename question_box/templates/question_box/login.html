@@ -8,23 +8,25 @@
         <link href="{% static 'question_box/css/styles.css' %}" rel="stylesheet">
     </head>
     <body>
-        <h2>Login</h2>
+        <h2 style="margin:10px">登录</h2>
         {% if message %}
             <div>{{ message }}</div>
         {% endif %}
 
-        <form action="{% url 'login' %}" method="post">
-            {% csrf_token %}
+        <form action="{% url 'login' %}" method="post" style="margin:10px">
+            <!-- {% csrf_token %} -->
             <div class="form-group">
-                <input autofocus class="form-control" type="text" name="username" placeholder="Username">
+                <input autofocus class="form-control" type="text" name="username" placeholder="用户名">
             </div>
+            <br>
             <div class="form-group">
-                <input class="form-control" type="password" name="password" placeholder="Password">
+                <input class="form-control" type="password" name="password" placeholder="密码">
             </div>
-            <input class="btn btn-primary" type="submit" value="Login">
+            <br>
+            <input class="btn btn-primary" type="submit" value="登录">
         </form>
 
-        Don't have an account? <a href="{% url 'register' %}">Register here.</a>
+       <span style="margin:10px">没有账户？ <a href="{% url 'register' %}">注册</a></span>
     </body>
 </html>
     
