@@ -6,11 +6,13 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext as _xw
 
 from . import models
 import json
 import datetime
+
+"topics = [family, study, social, personal development, other, confirm]"
 
 
 def index(request):
@@ -73,12 +75,20 @@ def login_view(request):
         # Attempt to sign user in
         username = request.POST.get("username")
         password = request.POST.get("password")
+
         user = authenticate(request, username=username, password=password)
 
-        # Check if authentication successful
-        if user is not None:
-            login(request, user)
-            return HttpResponseRedirect(reverse("index"))
+        if user:
+            new_user = models.NewUser.objects.get(id=user.id)
+
+            # Check if authentication successful and if user is active
+            if new_user.active:
+                login(request, user)
+                return HttpResponseRedirect(reverse("index"))
+
+            elif not new_user.active:
+                return JsonResponse({"error": "User Deactivated"}, status=400)
+
         else:
             return render(request, "question_box/login.html", {
                 "message": "用户名或密码不正确"
@@ -129,52 +139,86 @@ def ask(request):
             "request": request
         })
 
-    if request.method == "POST":
+    elif request.method == "POST":
         question = request.POST.get("question")
         topic = request.POST.get("topic")
         timestamp = datetime.datetime.now()
 
         '''Assign the box to corresponding ther in turn; The first question of topic "A" is assigned to the first thera of topic "A", 
-        the second question to the second thera and so forth; when all theras are used up, it starts from the beginning again'''
-        boxes = models.Boxes.objects.filter(topic=topic)
+        the second question to the second thera and so forth; when all theras are used up, it starts from the first thera again'''
+        boxes_topic = models.Boxes.objects.filter(topic=topic)
+        boxes_confirm = models.Boxes.objects.all()
+
+        # All the theras answering the topic
         theras_qset = models.NewUser.objects.filter(
-            user_type="thera", topic=topic)
-        theras = []
-        confirmed_by = models.NewUser.objects.filter(topic="confirm")[0]
+            user_type="thera", topic=topic, active=True)
+        theras_topic = []
+
+        confirm_set = models.NewUser.objects.filter(
+            user_type="thera", topic="confirm", active=True)
+        theras_confirm = []
 
         for thera in theras_qset:
-            theras.append(thera)
+            theras_topic.append(thera)
 
-        leng = len(boxes)
+        for thera in confirm_set:
+            theras_confirm.append(thera)
 
-        if leng != 0:
-            last_box = boxes[leng-1]
-            last_thera = last_box.answered_by
+        leng_topic = len(boxes_topic)
+        leng_confirm = len(boxes_confirm)
 
-            index = theras.index(last_thera)
+        def obtain_thera(leng, theras, task):
 
-            if index == (len(theras)-1):
-                answered_by = theras[0]
+            # If it is not the first box of the topic, there exists boxes[leng-1]; otherwise leng-1 = -1 error occurs
+            if leng != 0:
+
+                if task == "topic":
+                    last_box = boxes_topic[leng-1]
+                    last_thera = last_box.answered_by
+
+                elif task == "confirm":
+                    last_box = boxes_confirm[leng-1]
+                    last_thera = last_box.confirmed_by
+
+                # If the thera is not assigned manually
+                if last_thera in theras:
+                    index = theras.index(last_thera)
+
+                else:
+                    index = -1
+
+                if index == (len(theras)-1):
+                    thera = theras[0]
+
+                else:
+                    thera = theras[index+1]
+
             else:
-                answered_by = theras[index+1]
+                thera = theras[0]
 
-            box = models.Boxes(asked_by=user, answered=False,
-                               topic=topic, answered_by=answered_by, confirmed_by=confirmed_by)
-            box.save()
-            Question = models.Questions(
-                question=question, box=box, timestamp=timestamp)
-            Question.save()
-            return HttpResponseRedirect(reverse("ask"))
+            return thera
+
+        # To be assigned manually (no thera of this topic or to confirm)
+        if not theras_topic or not theras_confirm:
+            answered_by = None
+            confirmed_by = None
 
         else:
-            answered_by = theras[0]
-            box = models.Boxes(asked_by=user, answered=False,
-                               topic=topic, answered_by=answered_by, confirmed_by=confirmed_by)
-            box.save()
-            Question = models.Questions(
-                question=question, box=box, timestamp=timestamp)
-            Question.save()
-            return HttpResponseRedirect(reverse("ask"))
+            answered_by = obtain_thera(leng_topic, theras_topic, "topic")
+            confirmed_by = obtain_thera(
+                leng_confirm, theras_confirm, "confirm")
+
+        box = models.Boxes(asked_by=user, answered=False,
+                           topic=topic, answered_by=answered_by, confirmed_by=confirmed_by)
+        box.save()
+        Question = models.Questions(
+            question=question, box=box, timestamp=timestamp)
+        Question.save()
+
+        return HttpResponseRedirect(reverse("ask"))
+
+    else:
+        return HttpResponse(status=404)
 
 
 @login_required(login_url="/login")
@@ -222,67 +266,98 @@ def my_questions(request):
 
     else:
         return render(request, "question_box/login.html", {
-            "message": "Only the administrator and therapists could have access to this page!"
+            "message": "Login to see this page!"
         })
 
 
 @login_required(login_url="/login")
-def therapists(request):
+def therapists(request, action):
     user = models.NewUser.objects.get(id=request.user.id)
-    theras = models.NewUser.objects.filter(user_type="thera").values()
+    title = action
+
+    Theras = models.NewUser.objects.filter(user_type="thera")
+    theras = []
+    for thera in Theras:
+        if action == "active":
+            if thera.active:
+                theras.append(thera)
+
+        elif action == "inactive":
+            if not thera.active:
+                theras.append(thera)
+
+        elif action == "create":
+            theras.append(thera)
 
     # Only the admin can view this page
     if user.user_type == "admin":
-        return render(request, "question_box/therapists.html", {
-            "user": user,
-            "theras": theras,
-            "request": request
-        })
-    else:
-        return render(request, "question_box/login.html", {
-            "message": "Only the administrator could have access to this page!"
-        })
 
-
-@login_required(login_url="/login")
-def create_t(request):
-    user = models.NewUser.objects.get(id=request.user.id)
-
-    # Only the admin could view this page
-    if user.user_type == 'admin':
         if request.method == "GET":
-            return render(request, "question_box/create_t.html", {
-                "user": user
-            })
-        else:
-            username = request.POST.get("username")
-            email = request.POST.get("email")
 
-            # Ensure password matches confirmation
-            password = request.POST.get("password")
-            confirmation = request.POST.get("confirmation")
-            topic = request.POST.get("topic")
-
-            if password != confirmation:
-                return render(request, "question_box/create_t.html", {
-                    "message": "Passwords must match.",
+            if action == "active" or action == "inactive":
+                return render(request, "question_box/therapists.html", {
                     "user": user,
-                    "request": request
+                    "theras": theras,
+                    "request": request,
+                    "title": title
                 })
 
-            # Attempt to create new therapist
-            try:
-                new_user = models.NewUser.objects.create_user(
-                    username, email, password)
-                new_user.user_type = "thera"
-                new_user.topic = topic
-                new_user.save()
-            except IntegrityError:
+            elif action == "create":
                 return render(request, "question_box/create_t.html", {
-                    "message": "Username already taken.",
                     "user": user
                 })
-            return HttpResponseRedirect(reverse("therapists"))
+
+        elif request.method == "POST":
+            if action == "create":
+                username = request.POST.get("username")
+                email = request.POST.get("email")
+
+                # Ensure password matches confirmation
+                password = request.POST.get("password")
+                confirmation = request.POST.get("confirmation")
+                topic = request.POST.get("topic")
+
+                if password != confirmation:
+                    return render(request, "question_box/create_t.html", {
+                        "message": "Passwords must match.",
+                        "user": user,
+                        "request": request
+                    })
+
+                # Attempt to create new therapist
+                try:
+                    new_user = models.NewUser.objects.create_user(
+                        username, email, password)
+                    new_user.user_type = "thera"
+                    new_user.topic = topic
+                    new_user.save()
+
+                except IntegrityError:
+                    return render(request, "question_box/create_t.html", {
+                        "message": "Username already taken.",
+                        "user": user
+                    })
+                url = reverse('therapists', kwargs={'action': "active"})
+                return HttpResponseRedirect(url)
+
+            elif action == "change":
+                data = json.loads(request.body)
+                change_user = models.NewUser.objects.get(
+                    id=int(data["thera_id"]))
+                change_user.topic = data["topic"]
+                change_user.save()
+                return HttpResponse(status=204)
+
+            elif action == "activation":
+                data = json.loads(request.body)
+                change_user = models.NewUser.objects.get(
+                    id=int(data["thera_id"]))
+                change_user.active = data["active"]
+                change_user.save()
+                return HttpResponse(status=204)
+
+        else:
+            return JsonResponse({"error": "Invalid Request."}, status=400)
 
     else:
         return render(request, "question_box/login.html", {
@@ -337,9 +412,9 @@ def post(request, post):
                     if_post = data["post"]
 
                     if if_post:
-                        return HttpResponseRedirect(reverse("post/posted"))
+                        return HttpResponse(status=204)
                     else:
-                        return HttpResponseRedirect(reverse("post/unposted"))
+                        return HttpResponse(status=204)
 
                 elif data.get("answer_id") is not None:
                     answer = models.Answers.objects.get(
@@ -349,9 +424,9 @@ def post(request, post):
                     if_post = data["post"]
 
                     if if_post:
-                        return HttpResponseRedirect(reverse("post/posted"))
+                        return HttpResponse(status=204)
                     else:
-                        return HttpResponseRedirect(reverse("post/unposted"))
+                        return HttpResponse(status=204)
 
                 else:
                     return JsonResponse({"error": "Invalid Request."}, status=400)
@@ -374,7 +449,7 @@ def assign(request, assign):
 
     # Only the admin could view this page
     if user.user_type == "admin":
-        theras = models.NewUser.objects.filter(user_type="thera")
+        theras = models.NewUser.objects.filter(user_type="thera", active=True)
 
         if assign == "unassigned":
 
@@ -678,15 +753,28 @@ def confirm(request, username, confirm):
 
 def serialize(Boxes):
     boxes = []
+
     for Box in Boxes:
         dic = Box.serialize()
         dic["answers"] = Box.answers.all()
         dic["questions"] = Box.questions.all()
         dic["q_a_list"] = order_by_time(dic["questions"], dic["answers"])
+        dic["answered"] = Box.answered
 
         # Keep track of the last element of the box
         length = len(dic["q_a_list"])
         dic["last"] = dic["q_a_list"][length-1]
+
+        box_confirmed = True
+
+        for answer in Box.answers.all():
+            if not answer.confirmed:
+                box_confirmed = False
+
+        if not Box.answers.all():
+            box_confirmed = False
+
+        dic["box_confirmed"] = box_confirmed
 
         boxes.append(dic)
     return boxes

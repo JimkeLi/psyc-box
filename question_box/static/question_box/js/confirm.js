@@ -15,7 +15,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         confirmed: true
                     })
                 })
-                button.innerHTML = "Unconfirm";
+                .then(result => {
+                    location.href = '/' + username + '/confirm/unconfirmed'
+                })
             }
             else {
 
@@ -27,7 +29,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         confirmed: false
                     })
                 })
-                button.innerHTML = "Confirm";
+                .then(result => {
+                    location.href = '/' + username + '/confirm/confirmed'
+                })
             }
         }
     })

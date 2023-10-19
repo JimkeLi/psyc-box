@@ -22,14 +22,16 @@
             <br>
             {% for q_a in box.q_a_list %}
                 {% if q_a.type == "question" %}
-                    Q: {{ q_a.content.question }}
+                    <p style="font-size: large; margin-left: 10px;">Q: {{ q_a.content.question }}</p>
+                    <p style="font-size: small; color:gray; margin-left: 10px">Asked at {{ q_a.content.timestamp }}</p>
                     {% if not q_a.content.post %}
-                        <p id="post_identifier{{ q_a.content.id }}">Waiting to be posted</p>
+                        <p style="color:gray; font-size: small; margin-left: 10px;" id="post_identifier{{ q_a.content.id }}">Waiting to be
+                        posted</p>
                     {% else %}
-                        <p id="post_identifier{{ q_a.content.id }}">Already posted</p>
+                        <p style="color:gray; font-size: small; margin-left: 10px;" id="post_identifier{{ q_a.content.id }}">Already posted</p>
                     {% endif %}
-                    <hr>
                 {% endif %}
+
                 {% if q_a.type == "answer" %}
                     A: {{ q_a.content.answer }}
                     {% if not q_a.content.confirmed %}
@@ -37,37 +39,55 @@
                     {% else %}
                         <p id="confirm{{ q_a.content.id }}">Confirmed</p>
                     {% endif %}
-                    <hr>
                 {% endif %}
+                <hr>
             {% endfor %}
-            <form id="form{{ box.id }}">
+            <form id="form{{ box.id }}" class="margin-left-10">
                 <label for="answered_by{{ box.id }}">Assign a therapist to answer</label>
                 <select class="form-control" style="width:200px" id="answered_by{{ box.id }}">
                 {% for thera in theras %}
-                    <option>{{ thera.username }}</option>
+                    {% if thera == box.answered_by %}
+                        <option selected>{{ thera.username }}</option>
+                    {% else %}
+                        <option>{{ thera.username }}</option>
+                    {% endif %}
                 {% endfor %}
                 </select>
+                <br>
                 <label for="confirmed_by{{ box.id }}">Assign a therapist to confirm</label>
                 <select class="form-control" style="width:200px" id="confirmed_by{{ box.id }}">
                 {% for thera in theras %}
-                    <option>{{ thera.username }}</option>
+                    {% if thera == box.confirmed_by %}
+                        <option selected>{{ thera.username }}</option>
+                    {% else %}
+                        <option>{{ thera.username }}</option>
+                    {% endif %}
                 {% endfor %}
                 </select>
+                <br>
                 <input class="btn btn-primary" type="submit" id="submit{{ box.id }}" value="OK">
             </form>
+            <br>
             {% if box.answered_by %}
-                <p>Assigned to {{ box.answered_by.username }} to answer and {{ box.confirmed_by.username }} to confirm</p>
+                <p style="color:red; font-size: large; margin-left: 10px;">Assigned to <strong>{{ box.answered_by.username }}</strong> to answer and
+                    <strong>{{ box.confirmed_by.username }}</strong> to
+                    confirm
+                </p>
             {% else %}
-                <p>Unassigned</p>
+                <p style="color:red; font-size: large; margin-left: 10px;"><strong>Unassigned</strong></p>
             {% endif %}
+
             {% if not box.answered %}
-                <p>Unanswered</p>
+                <p style="color:red; font-size: large; margin-left: 10px;"><strong>Unanswered</strong></p>
             {% else %}
-                <p>Answered</p>
+                <p style="color:red; font-size: large; margin-left: 10px;"><strong>Answered</strong></p>
             {% endif %}
+
+            <p style="color: red;margin-left:10px"><strong><i>{{ box.topic }}</i></strong></p>
+            
         </div>
         <br>  
         {% endif %}
     {% endfor %}
-    <script src="{% static 'question_box/assign.js' %}"></script>
+    <script src="{% static 'question_box/js/assign.js' %}"></script>
 {% endblock %}

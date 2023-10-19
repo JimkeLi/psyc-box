@@ -6,13 +6,14 @@ Question Box
 {% endblock %}
 
 {% block img %}
-<img sizes="100vw 50vh" width="1600" height="1000" src="{% static 'question_box/my_questions.jpg'%}"
+<img sizes="100vw 50vh" width="1600" height="1000" src="{% static 'question_box/my_images/my_questions.jpg'%}"
   alt="Students walk the stairs in Gleeson Library.">
 {% endblock %}
 
 {% block body %}
 <div class="f--field f--wysiwyg">
   <h2>我的问题</h2>
+  <p>当您收到回复之后，可以选择点击“继续该聊天”与同一咨询师继续对话（否则与您对话的可能是另一位咨询师）</p>
 </div>
 <hr />
 
@@ -21,51 +22,56 @@ Question Box
   <br />
   {% for q_a in box.q_a_list %}
 
-  {% if q_a.type == "question" %}
-  <div id="question_box{{ q_a.content.id }}" style="margin-left: 10px;">
-    <span class="large inline-block" id="question{{ q_a.content.id }}">Q: {{ q_a.content.question }}</span>
-    <p style="font-size: small; color:gray">提问于 {{ q_a.content.timestamp }}</p>
+    {% if q_a.type == "question" %}
+    <div id="question_box{{ q_a.content.id }}" style="margin-left: 10px;">
+      <span class="large inline-block" id="question{{ q_a.content.id }}">Q: {{ q_a.content.question }}</span>
+      <p style="font-size: small; color:gray">提问于 {{ q_a.content.timestamp }}</p>
 
-    <!-- {% if not box.answered %}
-    <button id="post{{ q_a.content.id }}" class="btn btn-outline-secondary inline-block edit" style="margin:10px">
-      Edit
-    </button>
+      <!-- {% if not box.answered %}
+      <button id="post{{ q_a.content.id }}" class="btn btn-outline-secondary inline-block edit" style="margin:10px">
+        Edit
+      </button>
 
-    {% else %}
-    <sapn class="small-gray margin-left-10 inline-block">Answered</sapn>
-    {% endif %} -->
+      {% else %}
+      <sapn class="small-gray margin-left-10 inline-block">Answered</sapn>
+      {% endif %} -->
 
-    <!-- {% if not q_a.content.post %}
-    <span id="post_identifier{{ q_a.content.id }}" class="small-gray margin-left-10 inline-block"><i>Not
-        Posted</i></span>
+      <!-- {% if not q_a.content.post %}
+      <span id="post_identifier{{ q_a.content.id }}" class="small-gray margin-left-10 inline-block"><i>Not
+          Posted</i></span>
 
-    {% else %}
-    <span id="post_identifier{{ q_a.content.id }}" class="small-gray margin-left-10 inline-block"><i>Posted</i></span>
-    {% endif %} -->
+      {% else %}
+      <span id="post_identifier{{ q_a.content.id }}" class="small-gray margin-left-10 inline-block"><i>Posted</i></span>
+      {% endif %} -->
 
-    <br />
-  </div>
-  {% endif %}
+      <br />
+    </div>
+    {% endif %}
 
-  {% if q_a.type == "answer" %}
+    {% if q_a.type == "answer" %}
 
-  {% if q_a.content.confirmed %}
-  <div style="margin-left: 100px">
-    <span class="large darkgreen"><i>A: {{ q_a.content.answer }}</i></span>
-    <p style="font-size: small; color:gray">回答于 {{ q_a.content.timestamp }}</p>
-  </div>
-  <br />
-  {% endif %}
+      {% if q_a.content.confirmed %}
+      <div style="margin-left: 100px">
+        <span class="large darkgreen"><i>A: {{ q_a.content.answer }}</i></span>
+        <p style="font-size: small; color:gray">回答于 {{ q_a.content.timestamp }}</p>
+      </div>
+      <br />
+      {% endif %}
 
-  {% endif %}
+    {% endif %}
 
   {% endfor %}
+
+  {% if box.box_confirmed and box.answered %}
   <button id="askMore{{ box.id }}" class="btn btn-success askMore but">
     继续该聊天
   </button>
+  {% else %}
+  <p style="font-size: small; color:gray; margin-left: 10px;">请等待回复</p>
+  {% endif %}
 
 </div>
 <br />
 {% endfor %}
-<script src="{% static 'question_box/my_questions.js' %}"></script>
+<script src="{% static 'question_box/js/my_questions.js' %}"></script>
 {% endblock %}

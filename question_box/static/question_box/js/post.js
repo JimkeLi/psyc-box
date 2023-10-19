@@ -14,8 +14,10 @@ document.addEventListener("DOMContentLoaded", function () {
             question_id: question_id,
             post: true,
           }),
+        })
+          .then(result => {
+            location.href = "/post/unposted";
         });
-        button.innerHTML = "Unpost";
       }
       
       else {
@@ -27,8 +29,10 @@ document.addEventListener("DOMContentLoaded", function () {
             question_id: question_id,
             post: false,
           }),
-        });
-        button.innerHTML = "Post";
+        })
+          .then(result => {
+            location.href = "/post/posted";
+          });
       }
     };
   });
@@ -47,8 +51,10 @@ document.addEventListener("DOMContentLoaded", function () {
             answer_id: answer_id,
             post: true,
           }),
-        });
-        button.innerHTML = "Unpost";
+        })
+          .then(result => {
+            location.href = "/post/unposted";
+          });
       }
       
       else {
@@ -60,8 +66,10 @@ document.addEventListener("DOMContentLoaded", function () {
             answer_id: answer_id,
             post: false,
           }),
-        });
-        button.innerHTML = "Post";
+        })
+          .then(result => {
+            location.href = "/post/posted";
+          });
       }
     };
   });

@@ -47,20 +47,32 @@
                     {% endif %}
 
                 {% else %}
-                    <p style="color: red;margin-left:10px">Unconfirmed</p>
+                    <p style="color: red;margin-left:10px"><strong>Unconfirmed</strong></p>
                 {% endif %}
-                
-                    <br><br> 
-            {% endif %}
 
+            {% endif %}
+            <hr>
         {% endfor %}
-        <p style="color:red; font-size: large; margin-left: 10px;">Assigned to {{ box.answered_by.username }} to answer and
-            {{ box.confirmed_by.username }} to
-            confirm
-        </p>
+
+        {% if box.answered_by %}
+            <p style="color:red; font-size: large; margin-left: 10px;">Assigned to <strong>{{ box.answered_by.username }}</strong> to answer and
+                <strong>{{ box.confirmed_by.username }}</strong> to
+                confirm
+            </p>
+        {% else %}
+            <p style="color:red; font-size: large; margin-left: 10px;"><strong>Unassigned</strong></p>
+        {% endif %}
+        
+        {% if not box.answered %}
+            <p style="color:red; font-size: large; margin-left: 10px;"><strong>Unanswered</strong></p>
+        {% else %}
+            <p style="color:red; font-size: large; margin-left: 10px;"><strong>Answered</strong></p>
+        {% endif %}
+
         <p style="color: red;margin-left:10px"><strong><i>{{ box.topic }}</i></strong></p>
     </div>
     <br> 
 {% endfor %}
-<script src="{% static 'question_box/post.js' %}"></script> 
+
+<script src="{% static 'question_box/js/post.js' %}"></script> 
 {% endblock %}

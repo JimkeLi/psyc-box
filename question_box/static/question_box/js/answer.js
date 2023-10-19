@@ -22,6 +22,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     box_id: box_id,
                 })
             })
+                .then(result => {
+                    if(document.querySelector('#flag_answered').innerHTML === 'Unanswered')
+                    {
+                        location.href = '/' + username + '/answer/unanswered'
+                    }
+                    else
+                    {
+                        location.href = '/' + username + '/answer/answered'
+                    }
+            })
         }
     });
 
@@ -61,13 +71,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
             save.onclick = () => {
                 let answer = textarea.value;
-                div_answer.innerHTML = "A: " + answer;
+                // div_answer.innerHTML = "A: " + answer;
 
-                textarea.style.display = "none";
-                save.style.display = "none";
-                button.style.display = "block";
-                //div_answer.style.display = "block";
-                cancel.style.display = "none";
+                // textarea.style.display = "none";
+                // save.style.display = "none";
+                // button.style.display = "block";
+                // cancel.style.display = "none";
 
                 console.log(answer);
 
@@ -84,8 +93,31 @@ document.addEventListener('DOMContentLoaded', function() {
                             answer: answer
                         })
                     })
+                        .then(result => {
+                            if(document.querySelector('#flag_answered').innerHTML === 'Unanswered')
+                            {
+                                location.href = '/' + username + '/answer/unanswered'
+                            }
+                            else
+                            {
+                                location.href = '/' + username + '/answer/answered'
+                            }
+                    })
                 }
             }
+
+            save.disabled = true;
+
+            //Diable the save button when the answer is empty or unchanged
+            textarea.addEventListener('input', () => {
+                if (textarea.value.trim() === '' || textarea.value === content) {
+                    save.disabled = true;
+                }
+        
+                else {
+                    save.disabled = false;
+                }
+            });
 
             //Create the cancel button
             const cancel = document.createElement('button');

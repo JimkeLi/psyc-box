@@ -7,7 +7,7 @@
 <div>{{ message }}</div>
 {% endif %}
 
-<form action="{% url 'create_t' %}" method="post">
+<form action="{% url 'therapists' 'create' %}" method="post">
     <!-- {% csrf_token %} -->
     <div class="form-group">
         <input class="form-control" autofocus type="text" name="username" placeholder="Username">
@@ -32,9 +32,9 @@
             <option value="family">Family</option>
             <option value="study">Study</option>
             <option value="social">Social</option>
-            <option value="personal developmeny">Personal Development</option>
-            <option value="confirm">Climate</option>
-            <option value="confirm">Other</option>
+            <option value="personal development">Personal Development</option>
+            <!-- <option value="climate">Climate</option> -->
+            <option value="other">Other</option>
             <option value="confirm">Confirm</option>
         </select>
     </div>

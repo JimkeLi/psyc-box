@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/f0dc4da7-9984-4ee3-bbfa-529265b0b941/resourceGroups/psyc-box/providers/Microsoft.Web/sites/psyc-box",
+    "appService.deploySubpath": "."
+}

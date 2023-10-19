@@ -84,8 +84,15 @@ WSGI_APPLICATION = 'QuestionBox.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'psyc-box-db',
+        'USER': 'Ke_Li@psyc-box-db',
+        'PASSWORD': os.getenv("DB_PASSWORD"),
+        'HOST': 'psyc-box-db.postgres.database.azure.com',
+        'PORT': '5432',
+        'OPTIONS': {
+            "sslmode": "require"
+        }
     }
 }
 
@@ -129,8 +136,7 @@ LOCALE_PATHS = [
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
-
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Default primary key field type

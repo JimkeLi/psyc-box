@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block img %}
-<img sizes="100vw 50vh" width="1600" height="1000" src="{% static 'question_box/Share.jpg'%}"
+<img sizes="100vw 50vh" width="1600" height="1000" src="{% static 'question_box/my_images/ask.jpg'%}"
     alt="Students walk the stairs in Gleeson Library.">
 {% endblock %}
 
@@ -10,21 +10,25 @@
 <div class="f--field f--wysiwyg">
     <h2>和我们分享您的问题!</h2>
     <p>如果您不想公布您的对话，请在问题的开头写上：（我不想公开这段对话）</p>
+    <p>注意：问题提交之后不能更改</p>
 </div>
 <hr>
 <form action="{% url 'ask' %}" method="post" style="color:darkgreen">
     <!-- {% csrf_token %} -->
     <textarea style="height:300px;" class="form-control is-valid textarea-big" name="question" placeholder="在这里提出您的问题！"
         required></textarea>
+    <br>
     <label for="select-topic"><span class="large">请给您的问题选择一个类别 </span></label>
     <select class="form-control form-select-lg mb-3" aria-label=".form-select-lg example" id="select-topic"
         name="topic">
         <option value="family">家庭</option>
         <option value="study">学业</option>
         <option value="social">社交</option>
-        <option value="personal developmeny">个人发展</option>
+        <option value="personal development">个人发展</option>
+        <!-- <option value="climate">气候焦虑</option> -->
+        <option value="other">其他</option>
     </select>
-    <input type="submit" class="btn btn-success" id="but" value="提交" style="margin:10px" />
+    <input type="button" class="btn btn-success" id="but" value="提交" style="margin: top 5px" />
 </form>
 <!-- <script>
     document.querySelector("#lang").onchange = () =>
@@ -33,5 +37,5 @@
         document.querySelector("p").innerHTML = `请注意您和咨询师所有的对话都会被匿名地公布在这个网站上(<a href="{% url 'all_questions' %}")>所有问题</a>);如果您不想公布您的对话，请在问题的开头写上：（我不想公开这段对话）`;
     }
 </script> -->
-<script src="{% static 'question_box/ask.js' %}"></script>
+<script src="{% static 'question_box/js/ask.js' %}"></script>
 {% endblock %}

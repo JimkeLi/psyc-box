@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             form.onsubmit = () => {
-                alert("Question delivered successfully. We will contact you soon!")
+                alert("问题成功提交。我们会很快答复!")
             }
             
             //Get the div of the requested box

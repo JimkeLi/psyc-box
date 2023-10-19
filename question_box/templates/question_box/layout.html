@@ -92,31 +92,31 @@
                         <a class="nav-link" href="{% url 'all_questions' %}" id="all_questions">所有问题</a>
                       </li>
                       {% if user.user_type == "user" or not request.user.is_authenticated %}
-                      <li class="nav-item">
-                        <a class="nav-link" href="{% url 'ask' %}" id="share">提出问题</a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="{% url 'my_questions' %}" id="my_questions">我的问题</a>
-                      </li>
+                        <li class="nav-item">
+                          <a class="nav-link" href="{% url 'ask' %}" id="share">提出问题</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" href="{% url 'my_questions' %}" id="my_questions">我的问题</a>
+                        </li>
                       {% else %}
-                      {% if user.user_type == "admin" or request.user.id == 1 or request_user.user_type == "admin" %}
-                      <li class="nav-item">
-                        <a class="nav-link" href="{% url 'post' 'unposted' %}">Post</a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="{% url 'assign' 'unassigned' %}">Assign</a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="{% url 'therapists' %}">Therapists</a>
-                      </li>
-                      {% endif %}
-                      <li class="nav-item">
-                        <a class="nav-link" href="{% url 'answer' request.user.username 'unanswered' %}">Answering</a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link"
-                          href="{% url 'confirm' request.user.username 'unconfirmed' %}">Confirmation</a>
-                      </li>
+                        {% if user.user_type == "admin" or request_user.user_type == "admin" %}
+                          <li class="nav-item">
+                            <a class="nav-link" href="{% url 'post' 'unposted' %}">Post</a>
+                          </li>
+                          <li class="nav-item">
+                            <a class="nav-link" href="{% url 'assign' 'unassigned' %}">Assign</a>
+                          </li>
+                          <li class="nav-item">
+                            <a class="nav-link" href="{% url 'therapists' 'active' %}">Therapists</a>
+                          </li>
+                        {% endif %}
+                        <li class="nav-item">
+                          <a class="nav-link" href="{% url 'answer' request.user.username 'unanswered' %}">Answering</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link"
+                            href="{% url 'confirm' request.user.username 'unconfirmed' %}">Confirmation</a>
+                        </li>
                       {% endif%}
                       <!-- <li class="nav-item">
                         <a class="nav-link" id="a-lang">Language</a>

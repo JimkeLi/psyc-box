@@ -3,13 +3,38 @@
 
 {% block body %}
 <h2>Therapists</h2>
-<h4><a href="{% url 'create_t' %}"><strong>Create New Therapists</strong></a></h4>
+<h4><a href="{% url 'therapists' 'create' %}"><strong>Create New Therapists</strong></a></h4>
+<br>
+{% if title == "active" %}
+    <a href="{% url 'therapists' 'active' %}" style="color: darkgray;">Active</a>
+    &nbsp &nbsp &nbsp
+    <a href="{% url 'therapists' 'inactive' %}">Inactive</a>
+{% endif %}
+
+{% if title == "inactive" %}
+    <a href="{% url 'therapists' 'active' %}">Active</a>
+    &nbsp &nbsp &nbsp
+    <a href="{% url 'therapists' 'inactive' %}" style="color: darkgray;">Inactive</a>
+{% endif %}
 <hr>
+
 <ul>
     {% for thera in theras %}
-    <li>
-        <a href="/{{ thera.username }}/answer/unanswered">{{ thera.username }} ({{ thera.topic }})</a>
-    </li>
+    <div id="div{{ thera.id }}">
+        <li>
+            <a href="/{{ thera.username }}/answer/unanswered" style="font-size: x-large">{{ thera.username }}</a>
+            <span id="topic{{ thera.id }}" style="font-size: x-large">({{ thera.topic }})</span>
+        </li>
+        {% if title == "active" %}
+            <button class="btn btn-primary change inline-block" id="change{{ thera.id }}">Change Topic</button>
+            <button class="btn btn-danger activation inline-block" id="activation{{ thera.id }}">Deactivate</button>
+        {% else %}
+            <button class="btn btn-danger activation inline-block" id="activation{{ thera.id }}">Activate</button>
+        {% endif %}
+    </div>
+    <br>
     {% endfor %}
 </ul>
+
+<script src="{% static 'question_box/js/therapists.js' %}"></script>
 {% endblock %}

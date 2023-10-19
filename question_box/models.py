@@ -4,10 +4,11 @@ from django.contrib.auth.models import User
 
 class NewUser(User):
     user_type = models.CharField(max_length=50, default="user", null=True)
-    topic = models.TextField(default="family", null=True)
+    topic = models.TextField(default=None, null=True)
+    active = models.BooleanField(default=True, null=True)
 
     def __str__(self):
-        return f"id: {self.id}, username: {self.username},  user type: {self.user_type}, topic: {self.topic}"
+        return f"id: {self.id}, username: {self.username},  user type: {self.user_type}, topic: {self.topic}, active = {self.active}"
 
 
 class Questions(models.Model):
