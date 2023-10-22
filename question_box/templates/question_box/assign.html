@@ -22,7 +22,7 @@
             <br>
             {% for q_a in box.q_a_list %}
                 {% if q_a.type == "question" %}
-                    <p style="font-size: large; margin-left: 10px;">Q: {{ q_a.content.question }}</p>
+                    <p style="font-size: large; margin-left: 10px; margin-right:10px">Q: {{ q_a.content.question|linebreaks }}</p>
                     <p style="font-size: small; color:gray; margin-left: 10px">Asked at {{ q_a.content.timestamp }}</p>
                     {% if not q_a.content.post %}
                         <p style="color:gray; font-size: small; margin-left: 10px;" id="post_identifier{{ q_a.content.id }}">Waiting to be
@@ -33,16 +33,16 @@
                 {% endif %}
 
                 {% if q_a.type == "answer" %}
-                    A: {{ q_a.content.answer }}
+                    <p style="font-size: large; margin-left: 10px; margin-right:10px">A: {{ q_a.content.answer|linebreaks }}</p>
                     {% if not q_a.content.confirmed %}
-                        <p id="confirm{{ q_a.content.id }}">Unconfirmed</p>
+                        <p id="confirm{{ q_a.content.id }}" style="color:red; font-size: large; margin-left: 10px;"><strong>Unconfirmed</strong></p>
                     {% else %}
-                        <p id="confirm{{ q_a.content.id }}">Confirmed</p>
+                        <p id="confirm{{ q_a.content.id }}" style="color:red; font-size: large; margin-left: 10px;"><strong>Confirmed</strong></p>
                     {% endif %}
                 {% endif %}
                 <hr>
             {% endfor %}
-            <form id="form{{ box.id }}" class="margin-left-10">
+            <div style="margin-left: 10px">
                 <label for="answered_by{{ box.id }}">Assign a therapist to answer</label>
                 <select class="form-control" style="width:200px" id="answered_by{{ box.id }}">
                 {% for thera in theras %}
@@ -65,8 +65,8 @@
                 {% endfor %}
                 </select>
                 <br>
-                <input class="btn btn-primary" type="submit" id="submit{{ box.id }}" value="OK">
-            </form>
+                <button class="btn btn-primary" id="submit{{ box.id }}">OK</button>
+            </div>
             <br>
             {% if box.answered_by %}
                 <p style="color:red; font-size: large; margin-left: 10px;">Assigned to <strong>{{ box.answered_by.username }}</strong> to answer and

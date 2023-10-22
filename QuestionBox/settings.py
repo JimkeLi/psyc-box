@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import os
 # import django_on_heroku
 from pathlib import Path
+# from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -119,18 +121,25 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
-# LANGUAGE_CODE = 'en-us'
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale')
+]
+
 LANGUAGE_CODE = 'zh-hans'
+
+# LANGUAGES = [
+#     ('en', _('English')),
+#     ('zh-hans', _('Simplified Chinese')),
+# ]
 
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
+USE_L10N = True
+
 USE_TZ = True
 
-LOCALE_PATHS = [
-    os.path.join(BASE_DIR, 'locale')
-]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/

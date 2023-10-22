@@ -8,12 +8,12 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const form = document.createElement('form')
             form.method = "post";
-            form.action = "/my_questions";
+            form.action = window.location.href;
 
             //Create the text area of the form
             const textarea = document.createElement('textarea');
             textarea.name = "question";
-            textarea.placeholder = "继续这个对话";
+            textarea.placeholder = "继续该对话";
 
             //Add some styles to the textarea
             addClasses(textarea, ["form-control", "is-valid", "textarea-small"])
@@ -64,6 +64,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             form.onsubmit = () => {
+                console.log(textarea.value)
+                console.log(box_id)
                 alert("问题成功提交。我们会很快答复!")
             }
             

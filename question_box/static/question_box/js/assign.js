@@ -1,9 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
 
     //When forms are submitted
-    Array.from(document.querySelectorAll('form')).forEach(form => {
-        form.onsubmit = () =>{
-            let box_id = form.id.slice(4);
+    Array.from(document.querySelectorAll('button')).forEach(button => {
+        button.onclick = () =>{
+            let box_id = button.id.slice(6);
 
             //Get the id of the thera assigned to answer
             let answered_by_html_id = "answered_by" + box_id;
@@ -15,13 +15,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
             //POST the assigned theras to answer and confirm
             fetch('/assign/fetch', {
-                method: 'POST',
+                method: 'PUT',
                 body: JSON.stringify({
                     answered_by: answered_by,
                     confirmed_by: confirmed_by,
                     box_id: box_id
                 })
             })
+                .then(result => {
+                location.href = window.location.href
+            });
         }
     });
 })

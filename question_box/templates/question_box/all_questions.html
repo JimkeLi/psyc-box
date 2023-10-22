@@ -1,5 +1,7 @@
 {% extends "question_box/layout.html" %}
 {% load static %}
+{% load i18n %}
+
 {% block title %}
 Conselling Box
 {% endblock %}
@@ -11,7 +13,7 @@ Conselling Box
 
 {% block body %}
 <div class="f--field f--wysiwyg">
-    <h2>所有问题</h2>
+    <h2>{% trans "所有问题" %}</h2>
 </div>
 <hr />
 {% for box in boxes %}
@@ -20,17 +22,17 @@ Conselling Box
     {% for q_a in box.q_a_list %}
 
     {% if q_a.type == "question" %}
-    <div style="margin-left: 10px;">
-        <span class="large">Q: {{ q_a.content.question }}</span>
-        <p style="font-size: small; color:gray">提问于 {{ q_a.content.timestamp }}</p>
+    <div style="margin-left: 10px; margin-right: 10px;">
+        <span class="large">Q: {{ q_a.content.question|linebreaks }}</span>
+        <!-- <p style="font-size: small; color:gray">{% trans "提问于" %} {{ q_a.content.timestamp }}</p> -->
     </div>
     <br>
 
     {% elif q_a.type == "answer"  %}
     {% if q_a.content.confirmed %}
-        <div style="margin-left: 100px;">
-            <span class="large darkgreen"><i>A: {{ q_a.content.answer }}</i></span>
-            <p style="font-size: small; color:gray">回答于 {{ q_a.content.timestamp }}</p>
+        <div style="margin-left: 100px; margin-right: 10px;">
+            <span class="large darkgreen"><i>A: {{ q_a.content.answer|linebreaks }}</i></span>
+            <!-- <p style="font-size: small; color:gray">{ trans "回答于" %} {{ q_a.content.timestamp }}</p> -->
         </div>
         <br>
     {% endif %}

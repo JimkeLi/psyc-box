@@ -14,6 +14,6 @@ urlpatterns = [
     path("therapists/<str:action>", views.therapists, name="therapists"),
     path("post/<str:post>", views.post, name="post"),
     path("assign/<str:assign>", views.assign, name="assign"),
-    path("<str:username>/answer/<str:answer>", views.answer, name="answer"),
-    path("<str:username>/confirm/<str:confirm>", views.confirm, name="confirm")
+    path("answer/<str:username>/<str:answer>", views.answer, name="answer"),
+    path("confirm/<str:username>/<str:confirm>", views.confirm, name="confirm")
 ]

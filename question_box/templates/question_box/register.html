@@ -8,7 +8,7 @@
         <link href="{% static 'question_box/css/styles.css' %}" rel="stylesheet">
     </head>
     <body>
-        <h2 style="margin:10px">注册</h2>
+        <h2 style="margin:10px">{% trans '注册' %}</h2>
 
     {% if message %}
         <div>{{ message }}</div>
@@ -17,25 +17,25 @@
         <form action="{% url 'register' %}" method="post" style="margin:10px">
             <!-- {% csrf_token %} -->
             <div class="form-group">
-                <input class="form-control" autofocus type="text" name="username" placeholder="用户名">
+                <input class="form-control" autofocus type="text" name="username" placeholder="{% trans '用户名' %}">
             </div>
             <br>
             <div class="form-group">
-                <input class="form-control" type="email" name="email" placeholder="邮箱">
+                <input class="form-control" type="email" name="email" placeholder="{% trans '邮箱' %}">
             </div>
             <br>
             <div class="form-group">
-                <input class="form-control" type="password" name="password" placeholder="密码">
+                <input class="form-control" type="password" name="password" placeholder="{% trans '密码' %}">
             </div>
             <br>
             <div class="form-group">
-                <input class="form-control" type="password" name="confirmation" placeholder="重新输入密码">
+                <input class="form-control" type="password" name="confirmation" placeholder="{% trans '重新输入密码' %}">
             </div>
             <br>
-            <input class="btn btn-primary" type="submit" value="注册">
+            <input class="btn btn-primary" type="submit" value="{% trans '注册' %}">
         </form>
 
-       <span style="margin:10px">已经拥有账户？ <a href="{% url 'login' %}">登录</a></span>
+       <span style="margin:10px">{% trans '已有账户？' %}<a href="{% url 'login' %}">{% trans '登录' %}</a></span>
 
     </body>
 </html>

@@ -24,7 +24,7 @@
         {% for q_a in box.q_a_list %} 
 
             {% if q_a.type == "question" %} 
-                <span class = "large" style="margin-left:10px">Q: {{ q_a.content.question }}</span>
+                <span class = "large" style="margin-left:10px; margin-right:10px">Q: {{ q_a.content.question|linebreaks }}</span>
                 <p style="font-size: small; color:gray; margin-left:10px">Asked at {{ q_a.content.timestamp }}</p>
                 
                 {% if q_a.content.post %} 
@@ -35,7 +35,7 @@
 
                     <br><br> 
             {% elif q_a.type == "answer" %} 
-                <span class = "large" style="margin-left:10px">A: {{ q_a.content.answer }}</span>
+                <span class = "large" style="margin-left:10px; margin-right:10px">A: {{ q_a.content.answer|linebreaks }}</span>
                 <p style="font-size: small; color:gray; margin-left:10px">Asked at {{ q_a.content.timestamp }}</p>
                 
                 {% if q_a.content.confirmed %}

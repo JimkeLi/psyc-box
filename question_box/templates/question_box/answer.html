@@ -48,13 +48,13 @@ Answering
             {% for q_a in box.q_a_list %}
 
                 {% if q_a.type == "question" %}
-                    <p style="font-size: large; margin-left: 10px;">Q: {{ q_a.content.question }}</p>
+                    <p style="font-size: large; margin-left: 10px; margin-right:10px">Q: {{ q_a.content.question|linebreaks }}</p>
                     <p style="font-size: small; color:gray; margin-left: 10px">Asked at {{ q_a.content.timestamp }}</p>
 
-                {% if q_a.content.edited %}
+                <!-- {% if q_a.content.edited %}
                     The User has edited this question. <button id="omit{{ q_a.content.id }}"
                         class="btn btn-primary omit but">Omit</button>
-                {% endif %}
+                {% endif %} -->
 
                 {% if not q_a.content.post %}
                     <p style="color:gray; font-size: small; margin-left: 10px;" id="post_identifier{{ q_a.content.id }}">Waiting to be
@@ -68,8 +68,8 @@ Answering
 
                 {% if q_a.type == "answer" %}
                     <div id="answer_box{{ q_a.content.id }}">
-                        <p style="font-size: large; margin-left: 10px;" id="old_answer{{ q_a.content.id }}">
-                            A: {{ q_a.content.answer }}
+                        <p style="font-size: large; margin-left: 10px; margin-right:10px" id="old_answer{{ q_a.content.id }}">
+                            A: {{ q_a.content.answer|linebreaks }}
                         </p>
                     </div>
                     <div>
@@ -101,9 +101,10 @@ Answering
             {% endfor %}
 
                 {% if request_user.user_type == "thera" and title == "unanswered" %}
-                    <form id="form{{ box.id }}">
-                        <textarea class="form-control textarea-small" id="answer{{ box.id }}" placeholder="Your Reply"></textarea>
+                    <form id="form{{ box.id }}" action="{% url 'answer' user.username 'answer' %}" method="post">
+                        <textarea class="form-control textarea-small" id="answer{{ box.id }}" placeholder="Your Reply" name="answer"></textarea>
                         <input type="submit" class="btn btn-primary but" value="submit" />
+                        <input type="hidden" name="box_id" value="{{ box.id }}" />
                     </form>
                 {% endif  %}
 
@@ -113,7 +114,6 @@ Answering
                         confirm
                     </p>
                 {% else %}
-
                     <p style="color:red; font-size: large; margin-left: 10px;"><strong>Unassigned</strong></p>
                 {% endif %}
 

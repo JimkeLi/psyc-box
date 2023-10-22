@@ -1,4 +1,5 @@
 {% load static%}
+{% load i18n %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -8,7 +9,7 @@
         <link href="{% static 'question_box/css/styles.css' %}" rel="stylesheet">
     </head>
     <body>
-        <h2 style="margin:10px">登录</h2>
+        <h2 style="margin:10px">{% trans "登录" %}</h2>
         {% if message %}
             <div>{{ message }}</div>
         {% endif %}
@@ -16,17 +17,17 @@
         <form action="{% url 'login' %}" method="post" style="margin:10px">
             <!-- {% csrf_token %} -->
             <div class="form-group">
-                <input autofocus class="form-control" type="text" name="username" placeholder="用户名">
+                <input autofocus class="form-control" type="text" name="username" placeholder="{% trans '用户名' %}">
             </div>
             <br>
             <div class="form-group">
-                <input class="form-control" type="password" name="password" placeholder="密码">
+                <input class="form-control" type="password" name="password" placeholder="{% trans '密码' %}">
             </div>
             <br>
-            <input class="btn btn-primary" type="submit" value="登录">
+            <input class="btn btn-primary" type="submit" value="{% trans '登录' %}">
         </form>
 
-       <span style="margin:10px">没有账户？ <a href="{% url 'register' %}">注册</a></span>
+       <span style="margin:10px">{% trans '没有账号？' %} <a href="{% url 'register' %}">{% trans '注册' %}</a></span>
     </body>
 </html>
     

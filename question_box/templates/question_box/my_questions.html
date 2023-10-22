@@ -1,5 +1,6 @@
 {% extends "question_box/layout.html" %}
 {% load static %}
+{% load i18n %}
 
 {% block title %}
 Question Box
@@ -12,8 +13,8 @@ Question Box
 
 {% block body %}
 <div class="f--field f--wysiwyg">
-  <h2>我的问题</h2>
-  <p>当您收到回复之后，可以选择点击“继续该聊天”与同一咨询师继续对话（否则与您对话的可能是另一位咨询师）</p>
+  <h2>{% trans "我的问题" %}</h2>
+  <p>{% trans "当您收到回复之后，可以选择点击“继续该聊天”与同一咨询师继续对话（否则与您对话的可能是另一位咨询师）" %}</p>
 </div>
 <hr />
 
@@ -23,9 +24,9 @@ Question Box
   {% for q_a in box.q_a_list %}
 
     {% if q_a.type == "question" %}
-    <div id="question_box{{ q_a.content.id }}" style="margin-left: 10px;">
-      <span class="large inline-block" id="question{{ q_a.content.id }}">Q: {{ q_a.content.question }}</span>
-      <p style="font-size: small; color:gray">提问于 {{ q_a.content.timestamp }}</p>
+    <div id="question_box{{ q_a.content.id }}" style="margin-left: 10px; margin-right:10px">
+      <div class="large inline-block" id="question{{ q_a.content.id }}">Q: {{ q_a.content.question|linebreaks }}</div>
+      <p style="font-size: small; color:gray">{% trans "提问于" %} {{ q_a.content.timestamp }}</p>
 
       <!-- {% if not box.answered %}
       <button id="post{{ q_a.content.id }}" class="btn btn-outline-secondary inline-block edit" style="margin:10px">
@@ -51,9 +52,9 @@ Question Box
     {% if q_a.type == "answer" %}
 
       {% if q_a.content.confirmed %}
-      <div style="margin-left: 100px">
-        <span class="large darkgreen"><i>A: {{ q_a.content.answer }}</i></span>
-        <p style="font-size: small; color:gray">回答于 {{ q_a.content.timestamp }}</p>
+      <div style="margin-left: 100px; margin-right:10px">
+        <span class="large darkgreen"><i>A: {{ q_a.content.answer|linebreaks }}</i></span>
+        <p style="font-size: small; color:gray">{% trans "回答于" %} {{ q_a.content.timestamp }}</p>
       </div>
       <br />
       {% endif %}
@@ -64,10 +65,10 @@ Question Box
 
   {% if box.box_confirmed and box.answered %}
   <button id="askMore{{ box.id }}" class="btn btn-success askMore but">
-    继续该聊天
+    {% trans "继续该聊天" %}
   </button>
   {% else %}
-  <p style="font-size: small; color:gray; margin-left: 10px;">请等待回复</p>
+  <p style="font-size: small; color:gray; margin-left: 10px;">{% trans "请等待回复" %}</p>
   {% endif %}
 
 </div>

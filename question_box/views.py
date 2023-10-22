@@ -6,7 +6,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from django.utils.translation import gettext as _xw
+from django.utils.translation import gettext as _
 
 from . import models
 import json
@@ -24,10 +24,10 @@ def index(request):
         user = None
     else:
         user = models.NewUser.objects.get(id=request.user.id)
+
     return render(request, "question_box/index.html", {
         "user": user,
         "request": request,
-        "lang": "en"
     })
 
 
@@ -225,10 +225,12 @@ def ask(request):
 # @csrf_exempt
 def my_questions(request):
     user = models.NewUser.objects.get(id=request.user.id)
+
     if user.user_type == "user":
         Boxes = models.Boxes.objects.filter(asked_by=user)
         boxes = serialize(Boxes)
         boxes = reversed(boxes)
+
         if request.method == "GET":
             return render(request, "question_box/my_questions.html", {
                 "user": user,
@@ -238,31 +240,35 @@ def my_questions(request):
 
         # Continue the previous questions
         elif request.method == "POST":
-            question = request.POST.get("question")
+            question_content = request.POST.get("question")
+            box_id = request.POST.get("box_id")
             timestamp = datetime.datetime.now()
-            box = models.Boxes.objects.get(id=request.POST.get("box_id"))
+
+            box = models.Boxes.objects.get(id=box_id)
             box.answered = False
             box.save()
 
             # Store the new question asked
             Question = models.Questions(
-                question=question, box=box, timestamp=timestamp)
+                question=question_content, box=box, timestamp=timestamp)
             Question.save()
-            Boxes = models.Boxes.objects.filter(asked_by=user)
-            boxes = serialize(Boxes)
+
             return HttpResponseRedirect(reverse("my_questions"))
 
-        # Edit the questions asked
-        elif request.method == "PUT":
-            data = json.loads(request.body)
-            if data.get("question") is not None and data.get("question_id") is not None:
-                question = models.Questions.objects.get(
-                    id=int(data["question_id"]))
-                question.question = data["question"]
-                question.post = False
-                question.edited = True
-                question.save()
-                return HttpResponse(status=204)
+        else:
+            return HttpResponse(status=400)
+
+        # # Edit the questions asked
+        # elif request.method == "PUT":
+        #     data = json.loads(request.body)
+        #     if data.get("question") is not None and data.get("question_id") is not None:
+        #         question = models.Questions.objects.get(
+        #             id=int(data["question_id"]))
+        #         question.question = data["question"]
+        #         question.post = False
+        #         question.edited = True
+        #         question.save()
+        #         return HttpResponse(status=204)
 
     else:
         return render(request, "question_box/login.html", {
@@ -337,10 +343,12 @@ def therapists(request, action):
                         "message": "Username already taken.",
                         "user": user
                     })
+
                 url = reverse('therapists', kwargs={'action': "active"})
                 return HttpResponseRedirect(url)
 
-            elif action == "change":
+        elif request.method == "PUT":
+            if action == "change":
                 data = json.loads(request.body)
                 change_user = models.NewUser.objects.get(
                     id=int(data["thera_id"]))
@@ -355,6 +363,9 @@ def therapists(request, action):
                 change_user.active = data["active"]
                 change_user.save()
                 return HttpResponse(status=204)
+
+            else:
+                return JsonResponse({"error": "Invalid Request."}, status=400)
 
         else:
             return JsonResponse({"error": "Invalid Request."}, status=400)
@@ -489,7 +500,7 @@ def assign(request, assign):
 
         # POST method assigns the questions to therpiasts
         elif assign == "fetch":
-            if request.method == "POST":
+            if request.method == "PUT":
                 data = json.loads(request.body)
                 if data.get("answered_by") is not None and data.get("box_id") is not None and data.get("confirmed_by") is not None:
                     box = models.Boxes.objects.get(id=int(data["box_id"]))
@@ -567,7 +578,7 @@ def answer(request, username, answer):
                 "message": "Only the administrator and therapists could have access to this page!"
             })
 
-    if answer == "answered":
+    elif answer == "answered":
         if user.user_type == "thera":
             if request.method == "GET":
 
@@ -602,24 +613,46 @@ def answer(request, username, answer):
                 "message": "Only the administrator and therapists could have access to this page!"
             })
 
-    elif answer == "fetch":
+    # While theras submit their answers
+    elif answer == "answer":
 
         # POST method gets the answer written
         if request.method == "POST":
-            data = json.loads(request.body)
-            if data.get("answer") is not None and data.get("box_id") is not None:
-                timestamp = datetime.datetime.now()
-                box = models.Boxes.objects.get(id=int(data["box_id"]))
-                box.answered = True
-                box.save()
-                answer = models.Answers(
-                    answer=data["answer"], box=box, timestamp=timestamp, confirmed=False)
-                answer.save()
-                return HttpResponse(status=204)
-            else:
-                return JsonResponse({"error": "Invalid Request."}, status=400)
+            # data = json.loads(request.body)
+            # if data.get("answer") is not None and data.get("box_id") is not None:
+            #     timestamp = datetime.datetime.now()
+            #     box = models.Boxes.objects.get(id=int(data["box_id"]))
+            #     box.answered = True
+            #     box.save()
+            #     answer = models.Answers(
+            #         answer=data["answer"], box=box, timestamp=timestamp, confirmed=False)
+            #     answer.save()
+            #     return HttpResponse(status=204)
+            # else:
+            #     return JsonResponse({"error": "Invalid Request."}, status=400)
 
-        elif request.method == "PUT":
+            answer_content = request.POST.get("answer")
+            box_id = request.POST.get("box_id")
+            timestamp = datetime.datetime.now()
+
+            box = models.Boxes.objects.get(id=box_id)
+            box.answered = True
+            box.save()
+            answer = models.Answers(
+                answer=answer_content, box=box, timestamp=timestamp, confirmed=False
+            )
+            answer.save()
+
+            url = reverse('answer', kwargs={'username': request_user.username,
+                                            'answer': "unanswered"})
+            return HttpResponseRedirect(url)
+
+        else:
+            return JsonResponse({"error": "Invalid Request"}, status=400)
+
+    elif answer == "edit":
+
+        if request.method == "PUT":
             data = json.loads(request.body)
 
             # Get the editted answer
@@ -630,18 +663,18 @@ def answer(request, username, answer):
                 answer.save()
                 return HttpResponse(status=204)
 
-            # Get if the therapist chooses to omit user's edition
-            elif data.get("question_id") is not None and data.get("edited") is not None:
-                question = models.Questions.objects.get(id=data["question_id"])
-                question.edited = data["edited"]
-                question.save()
-                return HttpResponse(status=204)
+            # # Get if the therapist chooses to omit user's edition
+            # elif data.get("question_id") is not None and data.get("edited") is not None:
+            #     question = models.Questions.objects.get(id=data["question_id"])
+            #     question.edited = data["edited"]
+            #     question.save()
+            #     return HttpResponse(status=204)
 
-            else:
-                return JsonResponse({"error": "Invalid Request"}, status=400)
+            # else:
+            #     return JsonResponse({"error": "Invalid Request"}, status=400)
 
         else:
-            return JsonResponse({"error": "Method not allowed"}, status=400)
+            return JsonResponse({"error": "Invalid Request"}, status=400)
 
     else:
         return HttpResponse(status=404)

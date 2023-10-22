@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
           }),
         })
           .then(result => {
-            location.href = "/post/unposted";
+            location.href = window.location.href
         });
       }
       
@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
           }),
         })
           .then(result => {
-            location.href = "/post/posted";
+            location.href = window.location.href
           });
       }
     };
@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function () {
           }),
         })
           .then(result => {
-            location.href = "/post/unposted";
+            location.href = window.location.href
           });
       }
       
@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", function () {
           }),
         })
           .then(result => {
-            location.href = "/post/posted";
+            location.href = window.location.href
           });
       }
     };

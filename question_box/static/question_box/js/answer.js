@@ -1,7 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-    let username = document.querySelector('h2').id
-
-    var url = '/' + username + '/answer/fetch'
     Array.from(document.querySelectorAll('form')).forEach(form => {
         form.onsubmit = () => {
             let box_id = form.id.slice(4);
@@ -11,32 +8,36 @@ document.addEventListener('DOMContentLoaded', function() {
             let answer = document.querySelector(`#${answered_html_id}`).value;
 
             console.log(`answer: ${answer}`)
+            console.log(`box_id: ${box_id}`)
 
             alert("Answer Recieved")
             
             //POST the answer of the thera
-            fetch(url, {
-                method: 'POST',
-                body: JSON.stringify({
-                    answer: answer,
-                    box_id: box_id,
-                })
-            })
-                .then(result => {
-                    if(document.querySelector('#flag_answered').innerHTML === 'Unanswered')
-                    {
-                        location.href = '/' + username + '/answer/unanswered'
-                    }
-                    else
-                    {
-                        location.href = '/' + username + '/answer/answered'
-                    }
-            })
+            // fetch(url, {
+            //     method: 'POST',
+            //     body: JSON.stringify({
+            //         answer: answer,
+            //         box_id: box_id,
+            //     })
+            // })
+            //     .then(result => {
+            //         if(document.querySelector('#flag_answered').innerHTML === 'Unanswered')
+            //         {
+            //             location.href = '/' + username + '/answer/unanswered'
+            //         }
+            //         else
+            //         {
+            //             location.href = '/' + username + '/answer/answered'
+            //         }
+            // })
         }
     });
 
     Array.from(document.getElementsByClassName('edit')).forEach(button => {
         button.onclick = () => {
+            let username = document.querySelector('h2').id
+            var url = '/answer/' + username +'/edit'
+
             let answer_id = button.id.slice(4);
             
             let div_answer_box_id = 'answer_box' + answer_id;
@@ -78,30 +79,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 // button.style.display = "block";
                 // cancel.style.display = "none";
 
-                console.log(answer);
-
                 if(answer !== content) {
                     let confirm_id = "confirm" + answer_id;
                     document.querySelector(`#${confirm_id}`).innerText = "Unconfirmed";
-
+                    
+                    console.log(`answer_id:${answer_id}`)
                     console.log(`answer:${answer}`)
 
                     fetch(url, {
                         method: "PUT",
                         body: JSON.stringify({
                             answer_id: answer_id,
-                            answer: answer
+                            answer: answer,
                         })
                     })
                         .then(result => {
-                            if(document.querySelector('#flag_answered').innerHTML === 'Unanswered')
-                            {
-                                location.href = '/' + username + '/answer/unanswered'
-                            }
-                            else
-                            {
-                                location.href = '/' + username + '/answer/answered'
-                            }
+                                location.href = window.location.href
                     })
                 }
             }
@@ -142,39 +135,39 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    Array.from(document.getElementsByClassName('omit')).forEach(button => {
-        button.onclick = () => {
-            var question_id = button.id.slice(4);
-            var content = button.innerHTML;
-            if(content === "Omit"){
-                button.innerHTML = "Not Omit";
+    // Array.from(document.getElementsByClassName('omit')).forEach(button => {
+    //     button.onclick = () => {
+    //         var question_id = button.id.slice(4);
+    //         var content = button.innerHTML;
+    //         if(content === "Omit"){
+    //             button.innerHTML = "Not Omit";
 
-                console.log('edited: false')
+    //             console.log('edited: false')
                 
-                fetch(url, {
-                    method: "PUT",
-                    body: JSON.stringify({
-                        question_id: question_id,
-                        edited: false
-                    })
-                })
-            }
+    //             fetch(url, {
+    //                 method: "PUT",
+    //                 body: JSON.stringify({
+    //                     question_id: question_id,
+    //                     edited: false
+    //                 })
+    //             })
+    //         }
 
-            if(content === "Not Omit"){
-                button.innerHTML = "Omit";
+    //         if(content === "Not Omit"){
+    //             button.innerHTML = "Omit";
 
-                console.log('edited: true')
+    //             console.log('edited: true')
 
-                fetch(url, {
-                    method: "PUT",
-                    body: JSON.stringify({
-                        question_id: question_id,
-                        edited: true
-                    })
-                })
-            }
-        }
-    })
+    //             fetch(url, {
+    //                 method: "PUT",
+    //                 body: JSON.stringify({
+    //                     question_id: question_id,
+    //                     edited: true
+    //                 })
+    //             })
+    //         }
+    //     }
+    // })
 });
 
 //Add classes to element objects

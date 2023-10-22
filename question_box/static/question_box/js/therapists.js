@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 url = "/therapists/change"
 
                 fetch(url, {
-                    method: "POST",
+                    method: "PUT",
                     body: JSON.stringify({
                         thera_id: thera_id,
                         topic: topic,
@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', function() {
             url = "/therapists/activation"
 
             fetch(url, {
-                method: "POST",
+                method: "PUT",
                 body: JSON.stringify({
                     thera_id: thera_id,
                     active: active,

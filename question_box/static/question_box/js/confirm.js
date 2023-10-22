@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
             var content = button.innerHTML
             let answer_id = button.id.slice(7);
             let username = document.querySelector('h2').id
-            var url = '/' + username + '/confirm/fetch'
+            var url = '/confirm/' + username + '/fetch'
             if (content === "Confirm") {
 
                 //PUT the confirmation
@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     })
                 })
                 .then(result => {
-                    location.href = '/' + username + '/confirm/unconfirmed'
+                    location.href = window.location.href
                 })
             }
             else {
@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     })
                 })
                 .then(result => {
-                    location.href = '/' + username + '/confirm/confirmed'
+                    location.href = window.location.href
                 })
             }
         }
